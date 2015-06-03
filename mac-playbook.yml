@@ -1,0 +1,130 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  sudo: no
+  vars:
+    homebrew_taps:
+      - homebrew/binary
+      - homebrew/dupes
+      - caskroom/cask
+      - sanemat/font
+
+    homebrew_packages:
+      - { name: git }
+      - { name: readline }
+      - { name: openssl }
+      - { name: openssl, state: linked, install_options: force }
+      - { name: ansible }
+      - { name: cmake }
+      - { name: imagemagick }
+      - { name: rbenv }
+      - { name: ruby-build }
+      - { name: lua }
+      - { name: vim, install_options: with-lua }
+      - { name: tmux }
+      - { name: reattach-to-user-namespace }
+      - { name: tig }
+      - { name: zsh-completions }
+      - { name: curl }
+      - { name: wget }
+      - { name: bash-completion }
+      - { name: zsh, install_options: disable-etcdir }
+      - { name: node }
+      - { name: npm }
+
+    homebrew_cask_packages:
+      - { name: iterm2 }
+      - { name: dropbox }
+      - { name: virtualbox }
+      - { name: vagrant }
+      - { name: kobito }
+      - { name: dash }
+      - { name: atom }
+      - { name: google-chrome }
+      - { name: alfred }
+      - { name: skitch }
+      - { name: evernote }
+      - { name: bettertouchtool }
+      - { name: xtrafinder }
+      - { name: gyazo }
+      - { name: google-japanese-ime }
+      - { name: firefox }
+      - { name: skype }
+      - { name: slack }
+
+  tasks:
+    - name: add homebrew tap
+      homebrew_tap: tap={{ item }} state=present
+      with_items: homebrew_taps
+
+    - name: homebrew update
+      homebrew: update_homebrew=yes
+
+    # brew
+    - name: brew package install
+      homebrew: >
+        name={{ item.name }}
+        state={{ item.state | default('latest') }}
+        install_options={{
+          item.install_options | default() | join(',')
+          if item.install_options is not string
+            else item.install_options
+        }}
+      with_items: homebrew_packages
+      register: brew_result
+
+    - name: makdir brew_info
+      file: path=brew_info state=directory
+
+    - name: save brew_info
+      shell: brew info {{ item }} > brew_info/{{ item }}
+      with_items: brew_result.results | selectattr('changed') | map(attribute='item') | map(attribute='name') | list
+
+    # cask
+    - name: install homebrew-cask
+      homebrew: name=brew-cask state=latest
+
+    - name: install homebrew-cask-packages
+      homebrew_cask: name={{ item.name }} state={{ item.state | default('installed') }}
+      with_items: homebrew_cask_packages
+      register: cask_result
+
+    - name: makdir cask_info
+      file: path=cask_info state=directory
+
+    - name: save cask_info
+      shell: brew info {{ item }} > cask_info/{{ item }}
+      with_items: brew_result.results | selectattr('changed') | map(attribute='item') | map(attribute='name') | list
+
+    # dotfiles
+    - name: clone dotfiles
+      git: repo=https://github.com/yuemori/dotfiles dest=~/dotfiles
+
+    - name: mkdir vim-neobundle dir
+      file: path=~/.vim/bundle state=directory
+      notify: install neobundle
+
+    - name: make symlinks to under home dir
+      file: src={{ item }} dest=~/.{{ item | basename }} state=link force=yes
+      with_fileglob:
+        - ~/dotfiles/*
+
+    # Ricty
+    - name: Ricty | install xquartz
+      homebrew_cask: name=xquartz
+    - name: Ricty | install fontforge
+      homebrew: name=fontforge
+    - name: Ricty | install ricty
+      homebrew: name=ricty
+    - name: Ricty | copy font files
+      shell: cp -f $(brew --cellar ricty)/*/share/fonts/Ricty*.ttf ~/Library/Fonts
+      args:
+        creates: ~/Library/Fonts/Ricty-Bold.ttf
+      notify: run fc-cache
+
+  handlers:
+    - name: install neobundle
+      command: git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
+
+    - name: run fc-cache
+      shell: fc-cache -vf

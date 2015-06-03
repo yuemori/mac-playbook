@@ -39,7 +39,6 @@
       - { name: vagrant }
       - { name: kobito }
       - { name: dash }
-      - { name: atom }
       - { name: google-chrome }
       - { name: alfred }
       - { name: skitch }
@@ -51,6 +50,7 @@
       - { name: firefox }
       - { name: skype }
       - { name: slack }
+      - { name: mou }
 
   tasks:
     - name: add homebrew tap
@@ -98,7 +98,7 @@
 
     # dotfiles
     - name: clone dotfiles
-      git: repo=https://github.com/yuemori/dotfiles dest=~/dotfiles
+      git: repo=https://github.com/yuemori/dotfiles dest=~/dotfiles update=no
 
     - name: mkdir vim-neobundle dir
       file: path=~/.vim/bundle state=directory

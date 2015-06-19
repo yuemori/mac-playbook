@@ -75,7 +75,7 @@
       with_items: homebrew_packages
       register: brew_result
 
-    - name: makdir brew_info
+    - name: mkdir brew_info
       file: path=brew_info state=directory
 
     - name: save brew_info

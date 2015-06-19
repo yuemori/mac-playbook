@@ -31,6 +31,9 @@
       - { name: zsh, install_options: disable-etcdir }
       - { name: node }
       - { name: npm }
+      - { name: rsync }
+      - { name: pyenv }
+      - { name: tree }
 
     homebrew_cask_packages:
       - { name: iterm2 }
@@ -50,7 +53,6 @@
       - { name: firefox }
       - { name: skype }
       - { name: slack }
-      - { name: mou }
 
   tasks:
     - name: add homebrew tap

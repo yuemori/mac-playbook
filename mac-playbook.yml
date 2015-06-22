@@ -34,6 +34,7 @@
       - { name: rsync }
       - { name: pyenv }
       - { name: tree }
+      - { name: peco }
 
     homebrew_cask_packages:
       - { name: iterm2 }

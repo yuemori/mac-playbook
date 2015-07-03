@@ -8,6 +8,7 @@
       - homebrew/dupes
       - caskroom/cask
       - sanemat/font
+      - motemen/ghq
 
     homebrew_packages:
       - { name: git }
@@ -35,6 +36,9 @@
       - { name: pyenv }
       - { name: tree }
       - { name: peco }
+      - { name: the_silver_searcher }
+      - { name: ghq }
+      - { name: jq }
 
     homebrew_cask_packages:
       - { name: iterm2 }
@@ -54,6 +58,8 @@
       - { name: firefox }
       - { name: skype }
       - { name: slack }
+      - { name: libreoffice }
+      - { name: android-file-transfer }
 
   tasks:
     - name: add homebrew tap

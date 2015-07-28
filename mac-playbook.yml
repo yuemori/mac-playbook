@@ -39,6 +39,8 @@
       - { name: the_silver_searcher }
       - { name: ghq }
       - { name: jq }
+      - { name: android-platform-tools }
+      - { name: colordiff }
 
     homebrew_cask_packages:
       - { name: iterm2 }
@@ -60,6 +62,7 @@
       - { name: slack }
       - { name: libreoffice }
       - { name: android-file-transfer }
+      - { name: caffeine }
 
   tasks:
     - name: add homebrew tap

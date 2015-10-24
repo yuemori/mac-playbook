@@ -42,6 +42,11 @@
       - { name: android-platform-tools }
       - { name: colordiff }
       - { name: redis }
+      - { name: cscope }
+      - { name: q }
+      - { name: nfk }
+      - { name: heroku }
+      - { name: direnv }
 
     homebrew_cask_packages:
       - { name: iterm2 }
@@ -64,6 +69,7 @@
       - { name: libreoffice }
       - { name: android-file-transfer }
       - { name: caffeine }
+      - { name: mou }
 
   tasks:
     - name: add homebrew tap

@@ -47,6 +47,7 @@
       - { name: nfk }
       - { name: heroku }
       - { name: direnv }
+      - { name: pv }
 
     homebrew_cask_packages:
       - { name: iterm2 }
@@ -70,6 +71,7 @@
       - { name: android-file-transfer }
       - { name: caffeine }
       - { name: mou }
+      - { name: sequel-pro }
 
   tasks:
     - name: add homebrew tap
